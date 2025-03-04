@@ -83,12 +83,29 @@
 	        process memory.
 	 20. Allocates 12288 bytes and do not map it to anything.
 	 21. From `man arch_prctl`: arch_prctl() sets architecture-specific process or thread state.
-	     On amd64 the FS register is used to point to a thread-specific data area. Syscallt sets
+	     On amd64 the FS register is used to point to a thread-specific data area. Syscall sets
 	     the FS register to the address 0x7f9e70a51740. This is essential for accessing
 	     thread-local variables and other per-thread data that libraries (like glibc) rely on. 
-	  
-
-
+	 22. From `man set_tid_address`: The system call set_tid_address() sets the clear_child_tid
+	     value for the calling thread to tidptr.  I don't quite get what is this function doing
+             srry.
+	 23. From `man set_robust_list`: A thread can inform  the  kernel of  the  location of its
+             robust futex list using set_robust_list(). From what i understand futexes are some
+             fancy locking mechanism and this list is needed to use them.
+         24. I found some documentation online here https://manpages.opensuse.org/Tumbleweed/librseq-devel/rseq.2.en.html
+	     so from the website: The rseq() ABI accelerates specific user-space operations by
+	     registering a per-thread data structure shared between kernel and user-space.  It's
+	     pretty self explonatory.
+	 25-27. From `man mprotect`: mprotect() changes the access protections for the calling
+	     process's memory pages ... If the calling process tries to access memory in a manner
+	     that violates the protections, then the kernel generates a SIGSEGV signal for the
+	     process. So this syscall sets some memory regions to read only.
+         28. From `man prlimit`: Given a process ID and one or more resources, prlimit tries to
+             retrieve and/or modify the limits. So this syscall is querying current thread for
+	     current stack memory limit.
+	 29. munmap dereferences memory allocated in line 7.
+	 30. Writes to file descriptor number 1, 14 bytes of the string "Hello world!".
+	 31. From `man exit_group`: This system call terminates all threads in the calling process.
  *	
  */
 
